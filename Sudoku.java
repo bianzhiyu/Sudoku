@@ -70,6 +70,109 @@ public class Sudoku {
 	private boolean[][] fgrow,fgcol,fgblk;
 	//inner variables
 	
+	public Sudoku()
+	{
+		nums=new int[9][];
+		for (int i=0;i<9;i++)
+		{
+			nums[i]=new int[9];
+		}
+		fgrow=new boolean[9][];
+		fgcol=new boolean[9][];
+		fgblk=new boolean[9][];
+		for (int i=0;i<9;i++)
+		{
+			fgrow[i]=new boolean[9];
+			fgcol[i]=new boolean[9];
+			fgblk[i]=new boolean[9];
+		}
+		given=new boolean[9][0];
+		for (int i=0;i<9;i++)
+		{
+			given[i]=new boolean[9];
+		}
+		
+		frame=new JFrame("Sudoku");
+		Container JCP=frame.getContentPane();
+		JCP.setLayout(null);
+		
+		panels=new JPanel[3];
+		
+		panels[0]=new JPanel(null);
+		panels[1]=new JPanel(null);
+		panels[2]=new JPanel(null);
+		
+		panels[0].setBounds(0, 0, windowwidth, windowheight/19*9);
+		panels[1].setBounds(0, windowheight/19*9, windowwidth, windowheight/19);
+		panels[2].setBounds(0, windowheight/19*10, windowwidth, windowheight/19*9);
+		
+		panels[0].setBackground(new Color(0xFF,0xF0,0xF0));
+		panels[1].setBackground(new Color(0xF0,0xF0,0xFF));
+		panels[2].setBackground(new Color(0xF0,0xF0,0xF0));
+		
+		for (int i=0;i<3;i++)
+		{
+			JCP.add(panels[i]);
+		}
+		
+		Font ft=new Font("Arial", Font.BOLD, 25);
+		
+		ques=new JTextField[9][];
+		for (int i=0;i<9;i++)
+		{
+			ques[i]=new JTextField[9];	
+			for (int j=0;j<9;j++)
+			{
+				
+				ques[i][j]=new JTextField("");
+				ques[i][j].setFont(ft);
+				ques[i][j].setBounds(j*windowwidth/9, i*windowheight/19, windowwidth/9, windowheight/19);
+				panels[0].add(ques[i][j]);
+			}
+		}
+		
+		run=new JButton("Calc");
+		run.setFont(ft);
+		run.setForeground(new Color(0xFF,0x00,0x00));
+		run.setBounds(0, 0, windowwidth/3, windowheight/19);
+		run.addActionListener(new al_run(this));
+		status=new JLabel();
+		status.setFont(ft);
+		status.setBounds(windowwidth/3, 0, windowwidth/3, windowheight/19);
+		clc=new JButton("Clear");
+		clc.setFont(ft);
+		clc.setBounds(2*windowwidth/3, 0, windowwidth/3, windowheight/19);
+		clc.addActionListener(
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent evt)
+				{
+					clearAns();
+				}
+			}
+		);
+		
+		panels[1].add(run);
+		panels[1].add(status);
+		panels[1].add(clc);
+		
+		ans=new JLabel[9][];
+		for (int i=0;i<9;i++)
+		{
+			ans[i]=new JLabel[9];
+			for (int j=0;j<9;j++)
+			{
+				ans[i][j]=new JLabel("");
+				ans[i][j].setFont(ft);
+				ans[i][j].setBounds(j*windowwidth/9, i*windowheight/19, windowwidth/9, windowheight/19);
+				panels[2].add(ans[i][j]);
+			}
+		}
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(windowwidth+3*9,windowheight+4*19);
+	}
+	
 	public void showIllegalInput()
 	{
 		JLabel tmp=new JLabel("Illegal input sudoku!");
@@ -221,105 +324,6 @@ public class Sudoku {
 	}
 	public void go()
 	{
-		nums=new int[9][];
-		for (int i=0;i<9;i++)
-		{
-			nums[i]=new int[9];
-		}
-		fgrow=new boolean[9][];
-		fgcol=new boolean[9][];
-		fgblk=new boolean[9][];
-		for (int i=0;i<9;i++)
-		{
-			fgrow[i]=new boolean[9];
-			fgcol[i]=new boolean[9];
-			fgblk[i]=new boolean[9];
-		}
-		given=new boolean[9][0];
-		for (int i=0;i<9;i++)
-		{
-			given[i]=new boolean[9];
-		}
-		
-		frame=new JFrame("Sudoku");
-		Container JCP=frame.getContentPane();
-		JCP.setLayout(null);
-		
-		panels=new JPanel[3];
-		
-		panels[0]=new JPanel(null);
-		panels[1]=new JPanel(null);
-		panels[2]=new JPanel(null);
-		
-		panels[0].setBounds(0, 0, windowwidth, windowheight/19*9);
-		panels[1].setBounds(0, windowheight/19*9, windowwidth, windowheight/19);
-		panels[2].setBounds(0, windowheight/19*10, windowwidth, windowheight/19*9);
-		
-		panels[0].setBackground(new Color(0xFF,0xF0,0xF0));
-		panels[1].setBackground(new Color(0xF0,0xF0,0xFF));
-		panels[2].setBackground(new Color(0xF0,0xF0,0xF0));
-		
-		for (int i=0;i<3;i++)
-		{
-			JCP.add(panels[i]);
-		}
-		
-		Font ft=new Font("Arial", Font.BOLD, 25);
-		
-		ques=new JTextField[9][];
-		for (int i=0;i<9;i++)
-		{
-			ques[i]=new JTextField[9];	
-			for (int j=0;j<9;j++)
-			{
-				
-				ques[i][j]=new JTextField("");
-				ques[i][j].setFont(ft);
-				ques[i][j].setBounds(j*windowwidth/9, i*windowheight/19, windowwidth/9, windowheight/19);
-				panels[0].add(ques[i][j]);
-			}
-		}
-		
-		run=new JButton("Calc");
-		run.setFont(ft);
-		run.setForeground(new Color(0xFF,0x00,0x00));
-		run.setBounds(0, 0, windowwidth/3, windowheight/19);
-		run.addActionListener(new al_run(this));
-		status=new JLabel();
-		status.setFont(ft);
-		status.setBounds(windowwidth/3, 0, windowwidth/3, windowheight/19);
-		clc=new JButton("Clear");
-		clc.setFont(ft);
-		clc.setBounds(2*windowwidth/3, 0, windowwidth/3, windowheight/19);
-		clc.addActionListener(
-			new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					clearAns();
-				}
-			}
-		);
-		
-		panels[1].add(run);
-		panels[1].add(status);
-		panels[1].add(clc);
-		
-		ans=new JLabel[9][];
-		for (int i=0;i<9;i++)
-		{
-			ans[i]=new JLabel[9];
-			for (int j=0;j<9;j++)
-			{
-				ans[i][j]=new JLabel("");
-				ans[i][j].setFont(ft);
-				ans[i][j].setBounds(j*windowwidth/9, i*windowheight/19, windowwidth/9, windowheight/19);
-				panels[2].add(ans[i][j]);
-			}
-		}
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(windowwidth+3*9,windowheight+4*19);
 		frame.setVisible(true);
 	}
 }
